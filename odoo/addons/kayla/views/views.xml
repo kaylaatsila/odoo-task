@@ -1,0 +1,242 @@
+<odoo>
+	<data>
+		<!-- explicit list view definition -->
+		<!--
+    <record model="ir.ui.view" id="kayla.list">
+      <field name="name">kayla list</field>
+      <field name="model">kayla.kayla</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+		<!-- actions opening views on models -->
+		<!--
+    <record model="ir.actions.act_window" id="kayla.action_window">
+      <field name="name">kayla window</field>
+      <field name="res_model">kayla.kayla</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+		<!-- server action to the one above -->
+		<!--
+    <record model="ir.actions.server" id="kayla.action_server">
+      <field name="name">kayla server</field>
+      <field name="model_id" ref="model_kayla_kayla"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+		<!-- Top menu item -->
+		<!--
+    <menuitem name="kayla" id="kayla.menu_root"/>
+    -->
+		<!-- menu categories -->
+		<!--
+    <menuitem name="Menu 1" id="kayla.menu_1" parent="kayla.menu_root"/>
+    <menuitem name="Menu 2" id="kayla.menu_2" parent="kayla.menu_root"/>
+    -->
+		<!-- actions -->
+		<!--
+    <menuitem name="List" id="kayla.menu_1_list" parent="kayla.menu_1" action="kayla.action_window"/>
+    <menuitem name="Server to list" id="kayla" parent="kayla.menu_2" action="kayla.action_server"/>
+    -->
+
+		<!-- membuat tree/list -->
+		<record model="ir.ui.view" id="anggota_tree_view">
+			<field name="name">anggota.perpustakaan.tree</field>
+			<field name="model">anggota.perpustakaan</field>
+			<field name="arch" type="xml">
+				<tree string="Daftar Anggota">
+					<field name="name"/>
+					<field name="date"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- membuat tampilan form -->
+		<record model="ir.ui.view" id="anggota_form_view">
+			<field name="name">anggota.perpustakaan.form</field>
+			<field name="model">anggota.perpustakaan</field>
+			<field name="arch" type="xml">
+				<form string="Form Anggota">
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="date"/>
+						</group>
+						<notebook>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- membuat action/event object -->
+		<record model="ir.actions.act_window" id="anggota_list_action">
+			<field name="name">Anggota</field>
+			<field name="res_model">anggota.perpustakaan</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Buatlah keanggotaan pertamamu!</p>
+			</field>
+		</record>
+
+		<menuitem id="main_perpustakaan_menu" name="Perpustakaan"></menuitem>
+		<menuitem id="informasi_perpustakaan_menu" name="Informasi" parent="main_perpustakaan_menu"></menuitem>
+		<menuitem id="anggota_menu" name="Anggota" parent="informasi_perpustakaan_menu" action="anggota_list_action"></menuitem>
+
+		<!-- membuat tree/list buku -->
+		<record model="ir.ui.view" id="buku_tree_view">
+			<field name="name">buku.perpustakaan.tree</field>
+			<field name="model">buku.perpustakaan</field>
+			<field name="arch" type="xml">
+				<tree string="Daftar Buku">
+					<field name="name"/>
+					<field name="author"/>
+					<field name="left_stocks" widget="progressbar" type="char"/>
+				</tree>
+			</field>
+		</record>
+
+		<!--  membuat tampilan form buku -->
+		<record model="ir.ui.view" id="buku_form_view">
+			<field name="name">buku.perpustakaan.form</field>
+			<field name="model">buku.perpustakaan</field>
+			<field name="arch" type="xml">
+				<form string="Daftar Buku">
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="author"/>
+							<field name="stocks"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- membuat Action/Event Object buku -->
+		<record model="ir.actions.act_window" id="buku_list_action">
+			<field name="name">Buku</field>
+			<field name="res_model">buku.perpustakaan</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="buku_menu" name="Buku" parent="informasi_perpustakaan_menu" action="buku_list_action"/>
+
+
+		<!-- membuat tree/list peminjaman -->
+		<record model="ir.ui.view" id="peminjaman_tree_view">
+			<field name="name">peminjaman.perpustakaan.tree</field>
+			<field name="model">peminjaman.perpustakaan</field>
+			<field name="arch" type="xml">
+				<tree string="Daftar Peminjaman" domain="[('id', 'not in', return_ids]">
+					<field name="return_ids"/>
+					<field name="borrow_member_id"/>
+					<field name="borrow_book_id"/>
+					<field name="date_start" />
+					<field name="date_end" />
+				</tree>
+			</field>
+		</record>
+
+		<!--  membuat tampilan form peminjmanan -->
+		<record model="ir.ui.view" id="peminjaman_form_view">
+			<field name="name">peminjaman.perpustakaan.form</field>
+			<field name="model">peminjaman.perpustakaan</field>
+			<field name="arch" type="xml">
+				<form string="Daftar Peminjaman">
+					<sheet>
+						<group>
+							<group string="Informasi">
+								<field name="borrow_member_id"/>
+								<field name="date_start" />
+								<field name="date_end" />
+							</group>
+							<group string="Buku" colspan="2">
+								<field name="borrow_book_id"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- membuat Action/Event Object peminjaman -->
+		<record model="ir.actions.act_window" id="peminjaman_list_action">
+			<field name="name">Peminjaman</field>
+			<field name="res_model">peminjaman.perpustakaan</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="fitur_perpustakaan_menu" name="Fitur" parent="main_perpustakaan_menu"></menuitem>
+		<menuitem id="pinjam_menu" name="Peminjaman" parent="fitur_perpustakaan_menu" action="peminjaman_list_action"></menuitem>
+
+		<!-- membuat tree/list pengembalian -->
+		<record model="ir.ui.view" id="pengembalian_tree_view">
+			<field name="name">pengembalian.perpustakaan.tree</field>
+			<field name="model">pengembalian.perpustakaan</field>
+			<field name="arch" type="xml">
+				<tree string="Daftar Pengembalian">
+					<field name="return_member_id" string="Nama Anggota"/>
+					<field name="return_book_id" string="Judul"/>
+					<field name="return_deadline_id" string="Tenggat Pengembalian" />
+					<field name="date_return" string="Tanggal Aktual Pengembalian" />
+					<field name="penalty" string="Denda" type="char" />
+					<field name="status" string="Status" widget="statusbar" />
+				</tree>
+			</field>
+		</record>
+
+		<!--  membuat tampilan form peminjmanan -->
+		<record model="ir.ui.view" id="pengembalian_form_view">
+			<field name="name">pengembalian.perpustakaan.form</field>
+			<field name="model">pengembalian.perpustakaan</field>
+			<field name="arch" type="xml">
+				<form string="Daftar Pengembalian">
+					<sheet>
+						<group>
+							<group string="Informasi">
+								<field name="return_id" string="ID Peminjaman"/>
+								<field name="return_member_id" string="Nama Anggota"/>
+								<field name="return_deadline_id" string="Tenggat Pengembalian" />
+								<field name="date_return" string="Tanggal Aktual Pengembalian" />
+								<field name="penalty" />
+							</group>
+							<group string="Buku" colspan="2">
+								<field name="return_book_id" string="Judul"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- membuat Action/Event Object pengembalian -->
+		<record model="ir.actions.act_window" id="pengembalian_list_action">
+			<field name="name">Pengembalian</field>
+			<field name="res_model">pengembalian.perpustakaan</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="kembali_menu" name="Pengembalian" parent="fitur_perpustakaan_menu" action="pengembalian_list_action"></menuitem>
+
+	</data>
+</odoo>	
