@@ -1,11 +1,11 @@
 <odoo>
 	<data>
 		<!-- membuat tree/list -->
-		<record model="ir.ui.view" id="master_tree_view">
-			<field name="name">master.tree</field>
-			<field name="model">master</field>
+		<record model="ir.ui.view" id="produk_tree_view">
+			<field name="name">produk.tree</field>
+			<field name="model">produk</field>
 			<field name="arch" type="xml">
-				<tree string="Master">
+				<tree string="Produk">
 					<field name="product_name" />
 					<field name="order_limit" widget="integer" type="char" />
 					<field name="product_price" widget="integer" type="char"/>
@@ -14,11 +14,11 @@
 		</record>
 
 		<!-- membuat tampilan form -->
-		<record model="ir.ui.view" id="master_form_view">
-			<field name="name">master.form</field>
-			<field name="model">master</field>
+		<record model="ir.ui.view" id="produk_form_view">
+			<field name="name">produk.form</field>
+			<field name="model">produk</field>
 			<field name="arch" type="xml">
-				<form string="Form Master">
+				<form string="Form Produk">
 					<sheet>
 						<group>
 							<field name="product_name" />
@@ -33,9 +33,9 @@
 		</record>
 
 		<!-- membuat action/event object -->
-		<record model="ir.actions.act_window" id="master_list_action">
-			<field name="name">Master</field>
-			<field name="res_model">master</field>
+		<record model="ir.actions.act_window" id="produk_list_action">
+			<field name="name">Produk</field>
+			<field name="res_model">produk</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="help" type="html">
@@ -44,7 +44,51 @@
 		</record>
 
 		<menuitem id="main_menu" name="ATK"></menuitem>
-		<menuitem id="master_menu" name="Master" parent="main_menu" action="master_list_action"></menuitem>
+		<menuitem id="master_menu" name="Master" parent="main_menu"></menuitem>
+		<menuitem id="produk_menu" name="Produk" parent="master_menu" action="produk_list_action"></menuitem>
+
+		<!-- ================================================================================================== -->
+
+		<!-- membuat tree/list -->
+		<record model="ir.ui.view" id="divisi_tree_view">
+			<field name="name">divisi.tree</field>
+			<field name="model">divisi</field>
+			<field name="arch" type="xml">
+				<tree string="Divisi">
+					<field name="division_name" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- membuat tampilan form -->
+		<record model="ir.ui.view" id="divisi_form_view">
+			<field name="name">divisi.form</field>
+			<field name="model">divisi</field>
+			<field name="arch" type="xml">
+				<form string="Form Divisi">
+					<sheet>
+						<group>
+							<field name="division_name" />
+						</group>
+						<notebook>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- membuat action/event object -->
+		<record model="ir.actions.act_window" id="divisi_list_action">
+			<field name="name">Divisi</field>
+			<field name="res_model">divisi</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Masukkan divisi pertamamu!</p>
+			</field>
+		</record>
+
+		<menuitem id="divisi_menu" name="Divisi" parent="master_menu" action="divisi_list_action"></menuitem>
 
 		<!-- ================================================================================================== -->
 
@@ -54,9 +98,8 @@
 			<field name="model">transaksi</field>
 			<field name="arch" type="xml">
 				<tree string="Transaksi">
-					<field name="product_name" />
 					<field name="division" />
-					<field name="product_price" widget="integer" type="char"/>
+					<field name="date" />
 				</tree>
 			</field>
 		</record>
@@ -67,11 +110,25 @@
 			<field name="model">transaksi</field>
 			<field name="arch" type="xml">
 				<form string="Form Transaksi">
+					<header>
+						<button name="action_draft" string="Reset" type="object" states="sent,reject,approve"/>
+						<button name="action_send" string="Request" type="object" states="draft"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,sent"/>
+					</header>
 					<sheet>
 						<group>
-							<field name="product_name" />
 							<field name="division" />
-							<field name="product_price"/>
+							<field name="date" />
+						</group>
+						<field name="product_transaction" nolabel="1">
+							<tree editable="bottom">
+								<field name="product" />
+								<field name="quantity" />
+								<field name="sub_total" />
+							</tree>
+						</field>
+						<group>
+							<field name="grand_total" />
 						</group>
 						<notebook>
 						</notebook>

@@ -25,6 +25,7 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        'report/wizard_laporan.xml',
         'views/views.xml',
         'views/templates.xml',
         'views/master.xml',

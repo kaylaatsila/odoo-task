@@ -1,4 +1,3 @@
-import contextlib
 from odoo import models, fields, api
 import base64
 import xlsxwriter
@@ -153,11 +152,11 @@ class Laporan(models.TransientModel):
 
         query = """
 								select d.division_name, m.product_name, m.product_price, p.quantity
-								from master m, divisi_master d, produk_transaksi p, transaksi t
-								where m.id = p.master and (t.id = p.transaction 
-													  					and d.id = t.division
-                                			and t.state = '%s' 
-                                			and (t.date between '%s' and '%s'))
+								from produk m, divisi d, produk_transaksi p, transaksi t
+								where m.id = p.product and (t.id = p.transaction 
+													  					 and d.id = t.division
+                                			 and t.state = '%s' 
+                                			 and (t.date between '%s' and '%s'))
                 """ % (str(self.state),
                        str(self.start_date),
                        str(self.end_date))
