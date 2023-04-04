@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<template id="laporan_transaksi">
+		<t t-call="report.html_container">
+			<t t-foreach="docs" t-as="o">
+				<t t-call="report.external_layout">
+					<div class="page">
+
+						<!-- JUDUL REPORT-->
+						<h3 class="text-center">Laporan Transaksi</h3>
+
+						<!-- INFORMASI HEADER -->
+						<table class="table" style="table-layout: auto">
+							<tr>
+								<td colspan="1">
+									<strong>Pemesan</strong>
+								</td>
+								<td>
+									<span t-field="o.division" />
+								</td>
+							</tr>
+							<tr>
+								<td colspan="1">
+									<strong>Status</strong>
+								</td>
+								<td>
+									<span t-field="o.state" />
+								</td>
+							</tr>
+						</table>
+
+						<table class="table table-bordered" style="table-layout: auto">
+							<thead>
+								<tr class="text-center">
+									<th class="text-center">
+										<strong>Nama Produk</strong>
+									</th>
+									<th class="text-center">
+										<strong>Harga Satuan</strong>
+									</th>
+									<th class="text-center">
+										<strong>Jumlah Pembelian</strong>
+									</th>
+									<th class="text-center">
+										<strong>Subtotal</strong>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<t t-foreach="o.product_transaction" t-as="l">
+									<tr class="text-right">
+										<td class="text-left">
+											<span t-field="l.master" />
+										</td>
+										<td>
+											<span t-field="l.product_price" />
+										</td>
+										<td >
+											<span t-field="l.quantity" />
+										</td>
+										<td>
+											<span t-field="l.sum_price" />
+										</td>
+									</tr>
+								</t>
+								<tr class="text-right">
+									<td colspan="3">
+										<strong>Grand Total</strong>
+									</td>
+									<td>
+										<!-- <span t-field="l.sum_price" /> -->
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</t>
+			</t>
+		</t>
+	</template>
+
+</odoo>
