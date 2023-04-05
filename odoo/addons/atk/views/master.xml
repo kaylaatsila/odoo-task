@@ -5,7 +5,7 @@
 			<field name="name">produk.tree</field>
 			<field name="model">produk</field>
 			<field name="arch" type="xml">
-				<tree string="Produk">
+				<tree string="Product">
 					<field name="product_name" />
 					<field name="order_limit" widget="integer" type="char" />
 					<field name="product_price" widget="integer" type="char"/>
@@ -18,7 +18,7 @@
 			<field name="name">produk.form</field>
 			<field name="model">produk</field>
 			<field name="arch" type="xml">
-				<form string="Form Produk">
+				<form string="Product Form">
 					<sheet>
 						<group>
 							<field name="product_name" />
@@ -34,18 +34,18 @@
 
 		<!-- membuat action/event object -->
 		<record model="ir.actions.act_window" id="produk_list_action">
-			<field name="name">Produk</field>
+			<field name="name">Product</field>
 			<field name="res_model">produk</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="help" type="html">
-				<p class="oe_view_nocontent_create">Masukkan produk pertamamu!</p>
+				<p class="oe_view_nocontent_create">Input your first product!</p>
 			</field>
 		</record>
 
 		<menuitem id="main_menu" name="ATK"></menuitem>
 		<menuitem id="master_menu" name="Master" parent="main_menu"></menuitem>
-		<menuitem id="produk_menu" name="Produk" parent="master_menu" action="produk_list_action"></menuitem>
+		<menuitem id="produk_menu" name="Product" parent="master_menu" action="produk_list_action"></menuitem>
 
 		<!-- ================================================================================================== -->
 
@@ -54,7 +54,7 @@
 			<field name="name">divisi.tree</field>
 			<field name="model">divisi</field>
 			<field name="arch" type="xml">
-				<tree string="Divisi">
+				<tree string="Division">
 					<field name="division_name" />
 				</tree>
 			</field>
@@ -65,7 +65,7 @@
 			<field name="name">divisi.form</field>
 			<field name="model">divisi</field>
 			<field name="arch" type="xml">
-				<form string="Form Divisi">
+				<form string="Division Form">
 					<sheet>
 						<group>
 							<field name="division_name" />
@@ -79,16 +79,16 @@
 
 		<!-- membuat action/event object -->
 		<record model="ir.actions.act_window" id="divisi_list_action">
-			<field name="name">Divisi</field>
+			<field name="name">Division</field>
 			<field name="res_model">divisi</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="help" type="html">
-				<p class="oe_view_nocontent_create">Masukkan divisi pertamamu!</p>
+				<p class="oe_view_nocontent_create">Input your first division!</p>
 			</field>
 		</record>
 
-		<menuitem id="divisi_menu" name="Divisi" parent="master_menu" action="divisi_list_action"></menuitem>
+		<menuitem id="divisi_menu" name="Division" parent="master_menu" action="divisi_list_action"></menuitem>
 
 		<!-- ================================================================================================== -->
 
@@ -97,9 +97,10 @@
 			<field name="name">transaksi.tree</field>
 			<field name="model">transaksi</field>
 			<field name="arch" type="xml">
-				<tree string="Transaksi">
+				<tree string="Transaction">
 					<field name="division" />
 					<field name="date" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
@@ -109,10 +110,12 @@
 			<field name="name">transaksi.form</field>
 			<field name="model">transaksi</field>
 			<field name="arch" type="xml">
-				<form string="Form Transaksi">
+				<form string="Form Transaction">
 					<header>
-						<button name="action_draft" string="Reset" type="object" states="sent,reject,approve"/>
 						<button name="action_send" string="Request" type="object" states="draft"/>
+						<button name="action_reject" string="Reject" type="object" states="sent" class="btn-primary" group_id="transaksi_group_delete"/>
+						<button name="action_approve" string="Approve" type="object" states="sent" class="btn-primary"   />
+						<button name="action_draft" string="Reset" type="object" states="sent"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,sent"/>
 					</header>
 					<sheet>
@@ -139,15 +142,15 @@
 
 		<!-- membuat action/event object -->
 		<record model="ir.actions.act_window" id="transaksi_list_action">
-			<field name="name">Transaksi</field>
+			<field name="name">Transaction</field>
 			<field name="res_model">transaksi</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="help" type="html">
-				<p class="oe_view_nocontent_create">Buat transaksi pertamamu!</p>
+				<p class="oe_view_nocontent_create">Make your first transaction!</p>
 			</field>
 		</record>
 
-		<menuitem id="transaksi_menu" name="Transaksi" parent="main_menu" action="transaksi_list_action"></menuitem>
+		<menuitem id="transaksi_menu" name="Transaction" parent="main_menu" action="transaksi_list_action"></menuitem>
 	</data>
 </odoo>

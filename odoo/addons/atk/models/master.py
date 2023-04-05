@@ -5,13 +5,13 @@ class Produk(models.Model):
     _name = 'produk'
     _rec_name = 'product_name'
 
-    product_name = fields.Char(string='Nama Produk',
+    product_name = fields.Char(string='Product Name',
                                required=True, store=True)
 
-    order_limit = fields.Integer(string='Limit Order',
+    order_limit = fields.Integer(string='Order Limit',
                                  required=True, store=True)
 
-    product_price = fields.Integer(string='Harga Satuan',
+    product_price = fields.Integer(string='Unit Price',
                                    required=True, store=True)
 
     @api.onchange('product_name')
@@ -25,7 +25,7 @@ class Divisi(models.Model):
     _name = 'divisi'
     _rec_name = 'division_name'
 
-    division_name = fields.Char(string='Nama Divisi',
+    division_name = fields.Char(string='Division Name',
                                 required=True, store=True)
 
     # @api.onchange('division_name')

@@ -14,7 +14,7 @@ class Transaksi(models.Model):
     grand_total = fields.Integer(string='Grand Total', compute='_set_grand_total',
                                  readonly=True)
 
-    date = fields.Date(string='Tanggal Transaksi',
+    date = fields.Date(string='Transaction Date',
                        required=True, states={'draft': [('readonly', False)]})
 
     @api.multi
@@ -37,11 +37,19 @@ class Transaksi(models.Model):
     def action_send(self):
         self.write({'state': 'sent'})
 
-        for r in self.product_transaction:
-            if r.quantity > r.order_limit or r.quantity <= 0:
-                self.write({'state': 'reject'})
-            else:
-                self.write({'state': 'approve'})
+        # for r in self.product_transaction:
+        #     if r.quantity > r.order_limit or r.quantity <= 0:
+        #         self.write({'state': 'reject'})
+        #     else:
+        #         self.write({'state': 'approve'})
+
+    @api.multi
+    def action_reject(self):
+        self.write({'state': 'reject'})
+
+    @api.multi
+    def action_reject(self):
+        self.write({'state': 'approve'})
 
 
 class ProdukTransaksi(models.Model):
@@ -49,14 +57,13 @@ class ProdukTransaksi(models.Model):
 
     transaction = fields.Many2one(comodel_name='transaksi')
 
-    product = fields.Many2one(comodel_name='produk',
-                              string='Nama Produk', required=True)
+    product = fields.Many2one(comodel_name='produk', string='Product Name')
 
     product_price = fields.Integer(related='product.product_price')
 
     order_limit = fields.Integer(related='product.order_limit')
 
-    quantity = fields.Integer(string='Jumlah', required=True)
+    quantity = fields.Integer(string='Quantity')
 
     sub_total = fields.Integer(
         string='Sub Total', compute='_set_price', readonly=True)

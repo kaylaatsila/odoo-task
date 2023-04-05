@@ -7,7 +7,7 @@ import pytz
 
 
 class Laporan(models.TransientModel):
-    _name = 'laporan.wizard'
+    _name = 'laporan'
 
     state = fields.Selection([('draft', 'Draft'),
                               ('sent', 'Requested'),
@@ -150,16 +150,16 @@ class Laporan(models.TransientModel):
         worksheet.set_column('F1:F1', 20)
         worksheet.set_column('G1:G1', 20)
 
-        query = """
+        query = ("""
 								select d.division_name, m.product_name, m.product_price, p.quantity
 								from produk m, divisi d, produk_transaksi p, transaksi t
 								where m.id = p.product and (t.id = p.transaction 
 													  					 and d.id = t.division
                                 			 and t.state = '%s' 
                                 			 and (t.date between '%s' and '%s'))
-                """ % (str(self.state),
-                       str(self.start_date),
-                       str(self.end_date))
+                """) % (str(self.state),
+                        str(self.start_date),
+                        str(self.end_date))
 
         self.env.cr.execute(query)
 
@@ -169,50 +169,57 @@ class Laporan(models.TransientModel):
                               'Laporan Transaksi ATK',
                               wbf['company_center'])
         worksheet.merge_range('B2:G2',
-                              'Tanggal : %s s.d. %s' % (str(self.start_date),
-                                                        str(self.end_date)),
+                              ('Tanggal : %s s.d. %s') % (str(self.start_date),
+                                                          str(self.end_date)),
                               wbf['company'])
         worksheet.merge_range('B3:G3',
-                              'Status : %s' % str(self.state),
+                              ('Status : %s') % str(self.state),
                               wbf['company'])
 
         row = 4
-        worksheet.write('B%s' % (row+1), 'No', wbf['header_left'])
-        worksheet.write('C%s' % (row+1), 'Divisi', wbf['header_left'])
-        worksheet.write('D%s' % (row+1), 'Nama Produk', wbf['header'])
-        worksheet.write('E%s' % (row+1), 'Harga Satuan', wbf['header'])
-        worksheet.write('F%s' % (row+1), 'Jumlah Pembelian', wbf['header'])
-        worksheet.write('G%s' % (row+1), 'Sub Total', wbf['header_right'])
+        worksheet.write(('B%s') % (row+1), 'No', wbf['header_left'])
+        worksheet.write(('C%s') % (row+1), 'Divisi', wbf['header_left'])
+        worksheet.write(('D%s') % (row+1), 'Nama Produk', wbf['header'])
+        worksheet.write(('E%s') % (row+1), 'Harga Satuan', wbf['header'])
+        worksheet.write(('F%s') % (row+1), 'Jumlah Pembelian', wbf['header'])
+        worksheet.write(('G%s') % (row+1), 'Sub Total', wbf['header_right'])
         row += 2
 
         if ress == []:
-            worksheet.merge_range('B%s:G%s' % (row, row),
-                                  'Data tidak ada!', wbf['content'])
+            worksheet.merge_range(('B%s:G%s') % (row, row),
+                                  'Data tidak ada!',
+                                  wbf['content'])
         no = 1
         for res in ress:
-            worksheet.write('B%s' % (row), no, wbf['content_center'])
-            worksheet.write('C%s' % (row), res[0], wbf['content'])
-            worksheet.write('D%s' % (row), res[1], wbf['content'])
-            worksheet.write('E%s' % (row), res[2], wbf['content_curr'])
-            worksheet.write('F%s' % (row), res[3], wbf['content_right'])
-            worksheet.write('G%s' % (row), '=E%s * F%s' % ((row), (row)), wbf['content_curr'])
+            worksheet.write(('B%s') % (row), no, wbf['content_center'])
+            worksheet.write(('C%s') % (row), res[0], wbf['content'])
+            worksheet.write(('D%s') % (row), res[1], wbf['content'])
+            worksheet.write(('E%s') % (row), res[2], wbf['content_curr'])
+            worksheet.write(('F%s') % (row), res[3], wbf['content_right'])
+            worksheet.write(('G%s') % (row),
+                            ('=E%s * F%s') % ((row), (row)),
+                            wbf['content_curr'])
             row += 1
             no += 1
 
-        worksheet.merge_range('B%s:F%s' % (row, row),
+        worksheet.merge_range(('B%s:F%s') % (row, row),
                               'Grand Total',
                               wbf['content_curr_bold'])
-        worksheet.write('G%s' % (row), '=SUM(G5:G%s)' % (row-1), wbf['content_curr_bold'])
+        worksheet.write(('G%s') % (row),
+                        ('=SUM(G5:G%s)') % (row-1),
+                        wbf['content_curr_bold'])
         workbook.close()
 
         out = base64.encodestring(fp.getvalue())
 
-        self.write({'file': out, 'name': 'Laporan-Transaksi_%s_%s_%s.xlsx' % (
-            str(self.state), str(self.start_date), str(self.time))})
+        self.write({'file': out,
+                    'name': ('%s_Report_%s_%s.xlsx') % ((str(self.state)).title(),
+                                                        str(self.start_date),
+                                                        str(self.time))})
 
         fp.close()
 
         return {
             'type': 'ir.actions.act_url',
-            'url': '/web/content/laporan.wizard/%s/file/%s?download=true' % (self.id, self.name),
+            'url': ('/web/content/laporan/%s/file/%s?download=true') % (self.id, self.name),
             'name': 'contract', }

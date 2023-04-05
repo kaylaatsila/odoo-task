@@ -1,10 +1,10 @@
 <odoo>
 	<data>
 		<record model="ir.ui.view" id="laporan_form_view_menu">
-			<field name="name">laporan.wizard.form</field>
-			<field name="model">laporan.wizard</field>
+			<field name="name">laporan.form</field>
+			<field name="model">laporan</field>
 			<field name="arch" type="xml">
-				<form string="Laporan">
+				<form string="Report">
 					<group>
 						<field name="state"/>
 						<field name="start_date"/>
@@ -18,9 +18,9 @@
 			</field>
 		</record>
 
-		<act_window id="laporan_menu_action" name="Tambah Laporan" res_model="laporan.wizard" view_mode="form" view_id="laporan_form_view_menu" target="new"/>
+		<act_window id="laporan_menu_action" name="Get Report" res_model="laporan" view_mode="form" view_id="laporan_form_view_menu" target="new"/>
 
-		<menuitem id="laporan_menu" name="Laporan" parent="main_menu" action="laporan_menu_action"/>
+		<menuitem id="laporan_menu" name="Report" parent="main_menu" action="laporan_menu_action"/>
 
 	</data>
 </odoo>

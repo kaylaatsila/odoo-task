@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="transaksi_group_read" model="res.groups">
+		<field name="name">Transaksi Read</field>
+		<field name="menu_access" eval="[(4, ref('transaksi_menu'))]"/>
+	</record>
+
+	<record id="transaksi_access_read" model="ir.model.access">
+		<field name="model_id" ref="model_transaksi"/>
+		<field name="name">transaksi read</field>
+		<field name="group_id" ref="transaksi_group_read"/>
+		<field name="perm_read">1</field>
+	</record>
+
+	<record id="transaksi_group_update" model="res.groups">
+		<field name="name">Transaksi Update</field>
+		<field name="menu_access" eval="[(4, ref('transaksi_menu'))]"/>
+		<field name="implied_ids" eval="[(4, ref('transaksi_group_read'))]"/>
+	</record>
+
+	<record id="transaksi_access_update" model="ir.model.access">
+		<field name="model_id" ref="model_transaksi"/>
+		<field name="name">transaksi update</field>
+		<field name="group_id" ref="transaksi_group_update"/>
+		<field name="perm_create">1</field>
+		<field name="perm_write">1</field>
+	</record>
+
+	<record id="transaksi_group_delete" model="res.groups">
+		<field name="name">Transaksi Delete</field>
+		<field name="menu_access" eval="[(4, ref('transaksi_menu'))]"/>
+		<field name="implied_ids" eval="[(4, ref('transaksi_group_read'))]"/>
+	</record>
+
+	<!-- ========================================================================== -->
+
+	<record id="produk_transaksi_group_read" model="res.groups">
+		<field name="name">Produk Transaksi Read</field>
+	</record>
+
+	<record id="produk_transaksi_access_read" model="ir.model.access">
+		<field name="model_id" ref="model_produk_transaksi"/>
+		<field name="name">produk_transaksi read</field>
+		<field name="group_id" ref="produk_transaksi_group_read"/>
+		<field name="perm_read">1</field>
+	</record>
+
+	<record id="produk_transaksi_group_update" model="res.groups">
+		<field name="name">Produk Transaksi Update</field>
+		<field name="implied_ids" eval="[(4, ref('produk_transaksi_group_read'))]"/>
+	</record>
+
+	<record id="produk_transaksi_access_update" model="ir.model.access">
+		<field name="model_id" ref="model_produk_transaksi"/>
+		<field name="name">produk_transaksi update</field>
+		<field name="group_id" ref="produk_transaksi_group_update"/>
+		<field name="perm_create">1</field>
+		<field name="perm_write">1</field>
+	</record>
+
+	<record id="produk_transaksi_group_delete" model="res.groups">
+		<field name="name">Produk Transaksi Delete</field>
+		<field name="implied_ids" eval="[(4, ref('produk_transaksi_group_read'))]"/>
+	</record>
+
+	<record id="produk_transaksi_access_delete" model="ir.model.access">
+		<field name="model_id" ref="model_produk_transaksi"/>
+		<field name="name">produk_transaksi delete</field>
+		<field name="group_id" ref="produk_transaksi_group_delete"/>
+		<field name="perm_unlink">1</field>
+	</record>
+
+	<!-- ========================================================================== -->
+
+	<record id="produk_group_read" model="res.groups">
+		<field name="name">Produk Read</field>
+		<field name="menu_access" eval="[(4, ref('produk_menu'))]"/>
+	</record>
+
+	<record id="produk_access_read" model="ir.model.access">
+		<field name="model_id" ref="model_produk"/>
+		<field name="name">produk read</field>
+		<field name="group_id" ref="produk_group_read"/>
+		<field name="perm_read">1</field>
+	</record>
+
+	<record id="produk_group_update" model="res.groups">
+		<field name="name">Produk Update</field>
+		<field name="menu_access" eval="[(4, ref('produk_menu'))]"/>
+		<field name="implied_ids" eval="[(4, ref('produk_group_read'))]"/>
+	</record>
+
+	<record id="produk_access_update" model="ir.model.access">
+		<field name="model_id" ref="model_produk"/>
+		<field name="name">produk update</field>
+		<field name="group_id" ref="produk_group_update"/>
+		<field name="perm_create">1</field>
+		<field name="perm_write">1</field>
+	</record>
+
+	<record id="produk_group_delete" model="res.groups">
+		<field name="name">Produk Delete</field>
+		<field name="menu_access" eval="[(4, ref('produk_menu'))]"/>
+		<field name="implied_ids" eval="[(4, ref('produk_group_read'))]"/>
+	</record>
+
+	<record id="produk_access_delete" model="ir.model.access">
+		<field name="model_id" ref="model_produk"/>
+		<field name="name">produk delete</field>
+		<field name="group_id" ref="produk_group_delete"/>
+		<field name="perm_unlink">1</field>
+	</record>
+
+	<!-- ========================================================================== -->
+
+	<record id="divisi_group_read" model="res.groups">
+		<field name="name">Divisi Read</field>
+		<field name="menu_access" eval="[(4, ref('divisi_menu'))]"/>
+	</record>
+
+	<record id="divisi_access_read" model="ir.model.access">
+		<field name="model_id" ref="model_divisi"/>
+		<field name="name">divisi read</field>
+		<field name="group_id" ref="divisi_group_read"/>
+		<field name="perm_read">1</field>
+	</record>
+
+	<record id="divisi_group_update" model="res.groups">
+		<field name="name">Divisi Update</field>
+		<field name="menu_access" eval="[(4, ref('divisi_menu'))]"/>
+		<field name="implied_ids" eval="[(4, ref('divisi_group_read'))]"/>
+	</record>
+
+	<record id="divisi_access_update" model="ir.model.access">
+		<field name="model_id" ref="model_divisi"/>
+		<field name="name">divisi update</field>
+		<field name="group_id" ref="divisi_group_update"/>
+		<field name="perm_create">1</field>
+		<field name="perm_write">1</field>
+	</record>
+
+	<record id="divisi_group_delete" model="res.groups">
+		<field name="name">Divisi Delete</field>
+		<field name="menu_access" eval="[(4, ref('divisi_menu'))]"/>
+		<field name="implied_ids" eval="[(4, ref('divisi_group_read'))]"/>
+	</record>
+
+	<record id="divisi_access_delete" model="ir.model.access">
+		<field name="model_id" ref="model_divisi"/>
+		<field name="name">divisi delete</field>
+		<field name="group_id" ref="divisi_group_delete"/>
+		<field name="perm_unlink">1</field>
+	</record>
+
+	<!-- <record id="atk_user" model="res.groups">
+		<field name="implied_ids" eval="[(4,ref('transaksi_group_read')),
+									(4,ref('transaksi_group_update')),
+									(4,ref('transaksi_group_delete')),
+									(4,ref('produk_group_read')),
+									(4,ref('produk_group_update')),
+									(4,ref('produk_group_delete')),
+								 ]" />
+	</record> -->
+
+</odoo>
