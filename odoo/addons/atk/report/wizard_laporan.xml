@@ -20,7 +20,7 @@
 
 		<act_window id="laporan_menu_action" name="Get Report" res_model="laporan" view_mode="form" view_id="laporan_form_view_menu" target="new"/>
 
-		<menuitem id="laporan_menu" name="Report" parent="main_menu" action="laporan_menu_action"/>
+		<menuitem id="laporan_menu" name="Report" parent="main_menu" action="laporan_menu_action" groups="atk.atk_master"/>
 
 	</data>
 </odoo>

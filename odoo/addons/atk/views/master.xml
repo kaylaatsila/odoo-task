@@ -44,7 +44,7 @@
 		</record>
 
 		<menuitem id="main_menu" name="ATK"></menuitem>
-		<menuitem id="master_menu" name="Master" parent="main_menu"></menuitem>
+		<menuitem id="master_menu" name="Master" parent="main_menu" groups="atk.transaksi_group_delete"></menuitem>
 		<menuitem id="produk_menu" name="Product" parent="master_menu" action="produk_list_action"></menuitem>
 
 		<!-- ================================================================================================== -->
@@ -97,8 +97,9 @@
 			<field name="name">transaksi.tree</field>
 			<field name="model">transaksi</field>
 			<field name="arch" type="xml">
-				<tree string="Transaction">
+				<tree string="Transaction" decoration-info="state == 'draft'" decoration-warning="state == 'sent'" decoration-danger="state == 'reject'" decoration-success="state == 'approve'">
 					<field name="division" />
+					<field name="create_uid" />
 					<field name="date" />
 					<field name="state" />
 				</tree>
@@ -113,8 +114,8 @@
 				<form string="Form Transaction">
 					<header>
 						<button name="action_send" string="Request" type="object" states="draft"/>
-						<button name="action_reject" string="Reject" type="object" states="sent" class="btn-primary" group_id="transaksi_group_delete"/>
-						<button name="action_approve" string="Approve" type="object" states="sent" class="btn-primary"   />
+						<button name="action_reject" string="Reject" type="object" states="sent" class="btn-primary" groups="atk.atk_master"/>
+						<button name="action_approve" string="Approve" type="object" states="sent" class="btn-primary" groups="atk.atk_master"/>
 						<button name="action_draft" string="Reset" type="object" states="sent"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,sent"/>
 					</header>
@@ -122,6 +123,7 @@
 						<group>
 							<field name="division" />
 							<field name="date" />
+							<field name="justification" readonly="1"/>
 						</group>
 						<field name="product_transaction" nolabel="1">
 							<tree editable="bottom">
@@ -130,11 +132,17 @@
 								<field name="sub_total" />
 							</tree>
 						</field>
-						<group>
-							<field name="grand_total" />
+						<field name="grand_total"/>
+						<group colspan="4">
+							<group col="2">
+								<field name="create_uid" readonly="1"/>
+								<field name="create_date" readonly="1"/>
+							</group>
+							<group col="2">
+								<field name="write_uid" readonly="1"/>
+								<field name="write_date" readonly="1"/>
+							</group>
 						</group>
-						<notebook>
-						</notebook>
 					</sheet>
 				</form>
 			</field>
@@ -152,5 +160,25 @@
 		</record>
 
 		<menuitem id="transaksi_menu" name="Transaction" parent="main_menu" action="transaksi_list_action"></menuitem>
+
+		<!-- ================================================================================================== -->
+
+		<!-- <record model="ir.ui.view" id="rejeksi_transaksi_form_view_menu">
+			<field name="name">rejeksi.transaksi.form</field>
+			<field name="model">rejeksi.transaksi</field>
+			<field name="arch" type="xml">
+				<form string="Justifikasi">
+					<group>
+						<field name="justification"/>
+					</group>
+					<footer>
+						<button special="cancel" string="Cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<act_window id="rejeksi_transaksi_menu_action" name="Justifikasi" res_model="rejeksi_transaksi" view_mode="form" view_id="rejeksi_transaksi_form_view_menu" target="new"/> -->
+
 	</data>
 </odoo>

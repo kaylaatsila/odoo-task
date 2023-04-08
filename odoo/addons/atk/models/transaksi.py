@@ -5,17 +5,27 @@ class Transaksi(models.Model):
     _name = 'transaksi'
     _rec_name = 'division'
 
-    product_transaction = fields.One2many(comodel_name='produk.transaksi', inverse_name='transaction',
-                                          required=True, states={'draft': [('readonly', False)]})
+    product_transaction = fields.One2many(comodel_name='produk.transaksi',
+                                          inverse_name='transaction',
+                                          required=True,
+                                          readonly=True,
+                                          states={'draft': [('readonly', False)]})
 
     division = fields.Many2one(comodel_name='divisi',
-                               required=True, states={'draft': [('readonly', False)]})
+                               required=True,
+                               readonly=True,
+                               states={'draft': [('readonly', False)]},)
 
-    grand_total = fields.Integer(string='Grand Total', compute='_set_grand_total',
+    grand_total = fields.Integer(string='Grand Total',
+                                 compute='_set_grand_total',
                                  readonly=True)
 
     date = fields.Date(string='Transaction Date',
-                       required=True, states={'draft': [('readonly', False)]})
+                       required=True,
+                       readonly=True,
+                       states={'draft': [('readonly', False)]})
+
+    justification = fields.Text(comodel_name='rejeksi.transaksi')
 
     @api.multi
     def _set_grand_total(self):
@@ -27,7 +37,10 @@ class Transaksi(models.Model):
         ('sent', 'Request'),
         ('reject', 'Rejected'),
         ('approve', 'Approved'),
-    ], string='State', readonly=True, copy=False, default='draft')
+    ], string='State',
+        readonly=True,
+        copy=False,
+        default='draft')
 
     @api.multi
     def action_draft(self):
@@ -37,27 +50,23 @@ class Transaksi(models.Model):
     def action_send(self):
         self.write({'state': 'sent'})
 
-        # for r in self.product_transaction:
-        #     if r.quantity > r.order_limit or r.quantity <= 0:
-        #         self.write({'state': 'reject'})
-        #     else:
-        #         self.write({'state': 'approve'})
-
     @api.multi
     def action_reject(self):
         self.write({'state': 'reject'})
 
     @api.multi
-    def action_reject(self):
+    def action_approve(self):
         self.write({'state': 'approve'})
 
 
 class ProdukTransaksi(models.Model):
     _name = 'produk.transaksi'
 
-    transaction = fields.Many2one(comodel_name='transaksi')
+    transaction = fields.Many2one(comodel_name='transaksi',
+                                  string='Transaksi')
 
-    product = fields.Many2one(comodel_name='produk', string='Product Name')
+    product = fields.Many2one(comodel_name='produk',
+                              string='Product Name')
 
     product_price = fields.Integer(related='product.product_price')
 
@@ -66,9 +75,47 @@ class ProdukTransaksi(models.Model):
     quantity = fields.Integer(string='Quantity')
 
     sub_total = fields.Integer(
-        string='Sub Total', compute='_set_price', readonly=True)
+        string='Sub Total',
+        compute='_set_price',
+        readonly=True)
 
     @api.multi
     def _set_price(self):
         for r in self:
             r.sub_total = r.product_price * r.quantity
+
+    @api.onchange('quantity')
+    def verify_quantity(self):
+        for r in self:
+            if r.quantity > r.order_limit:
+                return {
+                    'value': {'quantity': r.order_limit  # mengisi field seats dengan nilai  limit order
+                              },
+                    'warning': {'title': "Warning",  # judul pop up
+                                'message': "Jumlah Pemesanan Tidak Boleh Melebihi Limit Order"  # pesan pop up
+                                }
+                }
+
+            if r.quantity < 0:
+                return {
+                    'value': {'quantity':  1  # mengisi field seats dengan nilai  1
+                              },
+                    'warning': {'title': "Warning",  # judul pop up
+                                'message': "Jumlah Pemesanan Tidak Boleh Negatif"  # pesan pop up
+                                }
+                }
+
+
+class Rejeksi(models.TransientModel):
+    _name = 'rejeksi.transaksi'
+
+    transaction = fields.Many2one(comodel_name='transaksi',
+                                  string='Transaksi')
+
+    justification = fields.Text(string='Justifikasi', default='_justification')
+
+    @api.multi
+    def _justification(self):
+        for r in self.transaction:
+            r.justification = self.justification
+            return {}

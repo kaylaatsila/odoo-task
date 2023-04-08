@@ -5,7 +5,6 @@ from io import BytesIO as StringIO
 from datetime import datetime
 import pytz
 
-
 class Laporan(models.TransientModel):
     _name = 'laporan'
 
