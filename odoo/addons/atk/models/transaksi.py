@@ -25,7 +25,7 @@ class Transaksi(models.Model):
                        readonly=True,
                        states={'draft': [('readonly', False)]})
 
-    justification = fields.Text(comodel_name='rejeksi.transaksi')
+    justification = fields.Text(string='Reason of Rejection')
 
     @api.multi
     def _set_grand_total(self):
@@ -57,6 +57,19 @@ class Transaksi(models.Model):
     @api.multi
     def action_approve(self):
         self.write({'state': 'approve'})
+
+    @api.multi
+    def set_reject(self):
+        reference = self.env.ref('atk.reject_form_view').id
+        return {
+            'name': 'Reason of Rejection',
+            'type': 'ir.actions.act_window',
+            'res_model': 'transaksi',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(reference, 'form')],
+            'target': 'new',
+            'res_id': self.id}
 
 
 class ProdukTransaksi(models.Model):
