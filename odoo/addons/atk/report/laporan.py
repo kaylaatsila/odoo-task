@@ -15,15 +15,11 @@ class Laporan(models.TransientModel):
                               ('approve', 'Approved')], string='State', required=True)
 
     start_date = fields.Date(string='Start Date', required=True)
-
     end_date = fields.Date(string='End Date', required=True)
-
     time = datetime.now(pytz.timezone('Asia/Jakarta')).strftime('%H-%M-%S')
-
+    
     name = fields.Char('File Name')
-
     file = fields.Binary('File', readonly=True)
-
     wbf = {}
 
     @api.multi
@@ -42,7 +38,6 @@ class Laporan(models.TransientModel):
                                                  'align': 'center',
                                                  'font_color': 'black'})
         self.wbf['title'].set_font_size(12)
-        self.wbf['title'].set_align('center')
         self.wbf['title'].set_font_name('Work Sans')
 
         self.wbf['header'] = workbook.add_format({'bold': 1,
@@ -54,8 +49,8 @@ class Laporan(models.TransientModel):
         self.wbf['header'].set_left()
         self.wbf['header'].set_right()
         self.wbf['header'].set_font_size(9)
-        self.wbf['header'].set_align('vcenter')
         self.wbf['header'].set_font_name('Work Sans')
+        self.wbf['header'].set_align('vcenter')
 
         self.wbf['header_left'] = workbook.add_format({'bold': 1,
                                                        'align': 'center',
@@ -146,8 +141,8 @@ class Laporan(models.TransientModel):
         fp = StringIO()
         workbook = xlsxwriter.Workbook(fp)
         workbook = self.add_workbook_format(workbook)
-        wbf = self.wbf
         worksheet = workbook.add_worksheet('Laporan Transaksi')
+        wbf = self.wbf
 
         worksheet.set_column('B1:B1', 5)
         worksheet.set_column('C1:C1', 15)
@@ -157,31 +152,20 @@ class Laporan(models.TransientModel):
         worksheet.set_column('G1:G1', 10)
         worksheet.set_column('H1:H1', 20)
 
-        query = ("""
-								select t.date, d.division_name, m.product_name, m.product_price, p.quantity
-								from produk m, divisi d, produk_transaksi p, transaksi t
-								where m.id = p.product and (t.id = p.transaction 
-													  					 and d.id = t.division
-                                			 and t.state = '%s' 
-                                			 and (t.date between '%s' and '%s'))
-                """) % (str(self.state),
-                        str(self.start_date),
-                        str(self.end_date))
+        query = (""" select t.date, d.division_name, m.product_name, m.product_price, p.quantity
+										 from produk m, divisi d, produk_transaksi p, transaksi t
+										 where m.id = p.product and (t.id = p.transaction 
+															  					  and d.id = t.division
+		                                			  and t.state = '%s' 
+		                                			  and (t.date between '%s' and '%s'))
+                """) % (str(self.state),  str(self.start_date), str(self.end_date))
 
         self.env.cr.execute(query)
-
         ress = self.env.cr.fetchall()
 
-        worksheet.merge_range('B1:H1',
-                              'Laporan Transaksi ATK',
-                              wbf['title'])
-        worksheet.merge_range('B2:H2',
-                              ('Tanggal : %s s.d. %s') % (str(self.start_date),
-                                                          str(self.end_date)),
-                              wbf['company'])
-        worksheet.merge_range('B3:H3',
-                              ('Status : %s') % str(self.state),
-                              wbf['company'])
+        worksheet.merge_range('B1:H1', 'Laporan Transaksi ATK',  wbf['title'])
+        worksheet.merge_range('B2:H2', ('Tanggal : %s s.d. %s') % (str(self.start_date), str(self.end_date)), wbf['company'])
+        worksheet.merge_range('B3:H3', ('Status : %s') % str(self.state), wbf['company'])
 
         row = 4
         worksheet.write(('B%s') % (row+1), 'No', wbf['header_left'])
@@ -194,9 +178,8 @@ class Laporan(models.TransientModel):
         row += 2
 
         if ress == []:
-            worksheet.merge_range(('B%s:H%s') % (row, row),
-                                  'Data tidak ada!',
-                                  wbf['content'])
+            worksheet.merge_range(('B%s:H%s') % (row, row), 'Data tidak ada!', wbf['content'])
+            
         no = 1
         for res in ress:
             worksheet.write(('B%s') % (row), no, wbf['content_center'])
@@ -205,26 +188,18 @@ class Laporan(models.TransientModel):
             worksheet.write(('E%s') % (row), res[2], wbf['content'])
             worksheet.write(('F%s') % (row), res[3], wbf['content_curr'])
             worksheet.write(('G%s') % (row), res[4], wbf['content_right'])
-            worksheet.write(('H%s') % (row),
-                            ('=F%s * G%s') % ((row), (row)),
-                            wbf['content_curr'])
+            worksheet.write(('H%s') % (row), ('=F%s * G%s') % ((row), (row)), wbf['content_curr'])
             row += 1
             no += 1
 
-        worksheet.merge_range(('B%s:G%s') % (row, row),
-                              'Grand Total',
-                              wbf['content_curr_bold'])
-        worksheet.write(('H%s') % (row),
-                        ('=SUM(H5:H%s)') % (row-1),
-                        wbf['content_curr_bold'])
+        worksheet.merge_range(('B%s:G%s') % (row, row), 'Grand Total', wbf['content_curr_bold'])
+        worksheet.write(('H%s') % (row), ('=SUM(H5:H%s)') % (row-1), wbf['content_curr_bold'])
         workbook.close()
 
         out = base64.encodestring(fp.getvalue())
 
         self.write({'file': out,
-                    'name': ('%s_Report_%s_%s.xlsx') % ((str(self.state)).title(),
-                                                        str(self.start_date),
-                                                        str(self.time))})
+                    'name': ('%s_Report_%s_%s.xlsx') % ((str(self.state)).title(), str(self.start_date), str(self.time))})
 
         fp.close()
 

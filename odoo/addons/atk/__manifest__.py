@@ -27,12 +27,11 @@
 
     # always loaded
     'data': [
-        'security/security.xml',
-        'security/ir.model.access.csv',
-        'report/wizard_laporan.xml',
-        'views/views.xml',
-        'views/templates.xml',
+        # 'security/ir.model.access.csv',
+        # 'security/security.xml',
         'views/master.xml',
+        'views/transaksi.xml',
+        'report/wizard_laporan.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
